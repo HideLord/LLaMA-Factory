@@ -1,6 +1,7 @@
 {
   "identity": {
-    "file_name": "identity.json"
+    "file_name": "identity.json",
+    "file_sha1": "ffe3ecb58ab642da33fbb514d5e6188f1469ad40"
   },
   "alpaca_en_demo": {
     "file_name": "alpaca_en_demo.json"
@@ -26,6 +27,7 @@
   },
   "mllm_demo": {
     "file_name": "mllm_demo.json",
+    "file_sha1": "d626cc0ad88a26d0dc9fcb47336821cf486d8bcc",
     "formatting": "sharegpt",
     "columns": {
       "messages": "messages",
@@ -67,6 +69,40 @@
   "alpaca_gpt4_zh": {
     "hf_hub_url": "llamafactory/alpaca_gpt4_zh",
     "ms_hub_url": "llamafactory/alpaca_gpt4_zh"
+  },
+  "skill_split_dataset": {
+    "hf_hub_url": "OpenLeecher/skill_split_dataset",
+    "columns": {
+      "prompt": "prompt",
+      "response": "response"
+    }
+  },
+  "double_take_dataset": {
+    "hf_hub_url": "OpenLeecher/double_take_dataset",
+    "columns": {
+      "prompt": "prompt",
+      "query": "query",
+      "response": "response",
+      "system": "system"
+    }
+  },
+  "totally_human_dataset": {
+    "file_name": "totally_human_dataset.json",
+    "columns": {
+      "prompt": "prompt",
+      "query": "query",
+      "response": "response",
+      "system": "system"
+    }
+  },
+  "similarity": {
+    "file_name": "similarity.json",
+    "columns": {
+      "prompt": "prompt",
+      "query": "query",
+      "response": "response",
+      "system": "system"
+    }
   },
   "glaive_toolcall_en": {
     "hf_hub_url": "llamafactory/glaive_toolcall_en",
@@ -180,7 +216,7 @@
     "ms_hub_url": "AI-ModelScope/webnovel_cn"
   },
   "nectar_sft": {
-    "hf_hub_url": "AstraMindAI/SFT-Nectar",
+    "hf_hub_url": "mlinmg/SFT-Nectar",
     "ms_hub_url": "AI-ModelScope/SFT-Nectar"
   },
   "deepctrl": {
@@ -225,6 +261,20 @@
       "content_tag": "content",
       "user_tag": "user",
       "assistant_tag": "assistant"
+    }
+  },
+  "ultima": {
+    "hf_hub_url": "OpenLeecher/ultima",
+    "formatting": "sharegpt",
+    "columns": {
+      "messages": "conversations",
+      "system": "system"
+    },
+    "tags": {
+      "role_tag": "from",
+      "content_tag": "value",
+      "user_tag": "human",
+      "assistant_tag": "gpt"
     }
   },
   "agent_instruct": {
@@ -487,6 +537,25 @@
       "system": "system"
     }
   },
+  "double_take_dataset_dpo": {
+    "hf_hub_url": "OpenLeecher/double_take_dataset_dpo",
+    "ranking": true,
+    "columns": {
+      "prompt": "prompt",
+      "chosen": "chosen",
+      "rejected": "rejected",
+      "system": "system"
+    }
+  },
+  "double_take_dataset_kto": {
+    "hf_hub_url": "OpenLeecher/double_take_dataset_kto",
+    "columns": {
+      "kto_tag": "label",
+      "prompt": "prompt",
+      "response": "response",
+      "system": "system"
+    }
+  },
   "hh_rlhf_en": {
     "script_url": "hh_rlhf_en",
     "ranking": true,
@@ -498,7 +567,7 @@
     }
   },
   "nectar_rm": {
-    "hf_hub_url": "AstraMindAI/RLAIF-Nectar",
+    "hf_hub_url": "mlinmg/RLAIF-Nectar",
     "ms_hub_url": "AI-ModelScope/RLAIF-Nectar",
     "ranking": true
   },
@@ -545,12 +614,14 @@
   },
   "wiki_demo": {
     "file_name": "wiki_demo.txt",
+    "file_sha1": "e70375e28eda542a90c68213640cc371898ce181",
     "columns": {
       "prompt": "text"
     }
   },
   "c4_demo": {
     "file_name": "c4_demo.json",
+    "file_sha1": "a5a0c86759732f9a5238e447fecd74f28a66cca8",
     "columns": {
       "prompt": "text"
     }

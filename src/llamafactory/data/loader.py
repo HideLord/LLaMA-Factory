@@ -108,7 +108,7 @@ def _load_single_dataset(
             name=data_name,
             data_dir=data_dir,
             data_files=data_files,
-            split=dataset_attr.split,
+            #split=data_args.split,
             cache_dir=model_args.cache_dir,
             token=model_args.hf_hub_token,
             streaming=(data_args.streaming and (dataset_attr.load_from != "file")),
@@ -259,6 +259,8 @@ def get_dataset(
         if data_args.val_size > 1e-6:
             dataset_dict = split_dataset(dataset, data_args, seed=training_args.seed)
         else:
+            if isinstance(dataset, dict):
+                DatasetDict({"train": dataset["train"], "validation": dataset["test"]})
             dataset_dict = {}
             if dataset is not None:
                 if data_args.streaming:
