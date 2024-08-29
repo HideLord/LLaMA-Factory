@@ -556,6 +556,14 @@
       "system": "system"
     }
   },
+  "kto_unpaired_dataset": {
+    "hf_hub_url": "OpenLeecher/kto_unpaired",
+    "columns": {
+      "kto_tag": "label",
+      "prompt": "prompt",
+      "response": "completion"
+    }
+  },
   "hh_rlhf_en": {
     "script_url": "hh_rlhf_en",
     "ranking": true,

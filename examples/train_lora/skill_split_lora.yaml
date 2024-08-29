@@ -1,0 +1,55 @@
+### model
+model_name_or_path: microsoft/Phi-3-mini-4k-instruct
+
+### method
+stage: sft
+do_train: true
+finetuning_type: lora
+low_cpu_mem_usage: true
+flash_attn: fa2
+
+### lora
+lora_rank: 200
+lora_alpha: 400
+lora_dropout: 0.05
+lora_target: all
+
+### ddp
+ddp_timeout: 180000000
+deepspeed: examples/deepspeed/ds_z2_config.json
+
+### dataset
+dataset: skill_split_dataset
+dataset_dir: data
+template: phi
+data_seed: 66
+seed: 66
+cutoff_len: 2000
+preprocessing_num_workers: 16
+use_fast_tokenizer: true
+
+### output
+output_dir: saves/lora/SkillSplit_v4.0
+logging_steps: 5
+save_steps: 381
+overwrite_output_dir: true
+load_best_model_at_end: true
+#run_name: SkillSplit_v4.0
+
+### train
+per_device_train_batch_size: 2
+gradient_accumulation_steps: 1
+learning_rate: 0.00009
+num_train_epochs: 1.0
+lr_scheduler_type: polynomial
+bf16: true
+max_grad_norm: 1.0
+warmup_steps: 25
+weight_decay: 0.001
+
+### eval
+val_size: 0.05
+per_device_eval_batch_size: 2
+evaluation_strategy: steps
+eval_steps: 381
+save_total_limit: 3

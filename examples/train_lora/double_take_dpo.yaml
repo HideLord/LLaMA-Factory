@@ -1,0 +1,59 @@
+### model
+model_name_or_path: /home/hidelord/LLaMA-Factory/export_folder/DoubleTake23/
+
+### method
+stage: dpo
+do_train: true
+finetuning_type: lora
+low_cpu_mem_usage: true
+flash_attn: fa2
+pref_ftx: 0.75
+pref_beta: 2.0
+simpo_gamma: 0.75
+pref_loss: simpo
+
+### lora
+lora_rank: 220
+lora_alpha: 380
+lora_dropout: 0.05
+lora_target: all
+
+### ddp
+ddp_timeout: 180000000
+deepspeed: examples/deepspeed/ds_z2_config.json
+
+### dataset
+dataset: double_take_dataset_dpo
+dataset_dir: data
+template: mistral
+data_seed: 66
+seed: 66
+cutoff_len: 2000
+preprocessing_num_workers: 16
+use_fast_tokenizer: true
+
+### output
+output_dir: saves/dpo/DoubleTake_v20.3
+logging_steps: 5
+save_steps: 54
+overwrite_output_dir: true
+load_best_model_at_end: true
+run_name: DoubleTake_v20.3_dpo
+
+### train
+per_device_train_batch_size: 1
+gradient_accumulation_steps: 2
+learning_rate: 0.000005
+num_train_epochs: 1.0
+lr_scheduler_type: polynomial
+bf16: true
+max_grad_norm: 1.0
+warmup_steps: 35
+weight_decay: 0.005
+
+### eval
+val_size: 0.05
+per_device_eval_batch_size: 1
+evaluation_strategy: steps
+eval_steps: 54
+save_total_limit: 4
