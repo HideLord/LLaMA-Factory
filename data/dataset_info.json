@@ -124,6 +124,20 @@
     "hf_hub_url": "llamafactory/lima",
     "formatting": "sharegpt"
   },
+  "open_webui_dataset": {
+    "hf_hub_url": "OpenLeecher/open_webui_dataset",
+    "formatting": "sharegpt",
+    "columns": {
+      "messages": "conversations",
+      "system": "system"
+    },
+    "tags": {
+      "role_tag": "from",
+      "content_tag": "value",
+      "user_tag": "human",
+      "assistant_tag": "gpt"
+    }
+  },
   "guanaco": {
     "hf_hub_url": "JosephusCheung/GuanacoDataset",
     "ms_hub_url": "AI-ModelScope/GuanacoDataset"

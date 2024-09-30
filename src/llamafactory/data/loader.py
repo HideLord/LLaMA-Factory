@@ -179,7 +179,7 @@ def _get_preprocessed_dataset(
     preprocess_func, print_function = get_preprocess_and_print_func(
         data_args, stage, template, tokenizer, processor, do_generate=(training_args.predict_with_generate and is_eval)
     )
-    column_names = list(next(iter(dataset)).keys())
+    column_names = list(next(iter(dataset['train'])).keys())
     kwargs = {}
     if not data_args.streaming:
         kwargs = dict(
@@ -199,7 +199,7 @@ def _get_preprocessed_dataset(
     if training_args.should_log:
         try:
             print("eval example:" if is_eval else "training example:")
-            print_function(next(iter(dataset)))
+            print_function(next(iter(dataset['train'])))
         except StopIteration:
             if stage == "pt":
                 raise RuntimeError("Cannot find sufficient samples, consider increasing dataset size.")
