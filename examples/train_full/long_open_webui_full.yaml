@@ -9,13 +9,7 @@ finetuning_type: full
 low_cpu_mem_usage: true
 flash_attn: fa2
 enable_liger_kernel: true
-#additional_target: embed_tokens,lm_head
-
-### lora
-#lora_rank: 32
-#lora_alpha: 64
-#lora_dropout: 0.01
-#lora_target: all
+optim: adamw_8bit
 
 ### ddp
 ddp_timeout: 180000000
@@ -60,5 +54,5 @@ weight_decay: 0.005
 val_size: 0.05
 per_device_eval_batch_size: 4
 evaluation_strategy: steps
-eval_steps: 37
+eval_steps: 12
 save_total_limit: 3

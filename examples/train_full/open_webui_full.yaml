@@ -9,13 +9,7 @@ finetuning_type: full
 low_cpu_mem_usage: true
 flash_attn: fa2
 enable_liger_kernel: true
-#additional_target: embed_tokens,lm_head
-
-### lora
-#lora_rank: 32
-#lora_alpha: 64
-#lora_dropout: 0.01
-#lora_target: all
+optim: adamw_8bit
 
 ### ddp
 ddp_timeout: 180000000
@@ -32,23 +26,23 @@ preprocessing_num_workers: 16
 use_fast_tokenizer: true
 
 ### output
-output_dir: saves/lora/Llama_Open_Webui_0.1
+output_dir: saves/full/Llama_Open_Webui_0.2
 logging_steps: 5
-save_steps: 444
+save_steps: 458
 overwrite_output_dir: true
 load_best_model_at_end: true
-run_name: Llama_Open_Webui_0.1
+run_name: Llama_Open_Webui_0.2
 
 ### hub
 push_to_hub: true
-hub_model_id: llama_8b_lima
+hub_model_id: llama_8b_lima_2
 hub_strategy: end
 hub_token: __HUB__TOKEN__PLACEHOLDER__
 
 ### train
 per_device_train_batch_size: 2
 gradient_accumulation_steps: 2
-learning_rate: 0.000009
+learning_rate: 0.000008
 num_train_epochs: 1.0
 lr_scheduler_type: polynomial
 bf16: true
@@ -58,7 +52,7 @@ weight_decay: 0.005
 
 ### eval
 val_size: 0.05
-per_device_eval_batch_size: 4
+per_device_eval_batch_size: 2
 evaluation_strategy: steps
-eval_steps: 37
+eval_steps: 229
 save_total_limit: 3
