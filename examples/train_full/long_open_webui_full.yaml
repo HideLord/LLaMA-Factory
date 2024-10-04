@@ -30,7 +30,6 @@ output_dir: saves/full/Llama_Open_Webui_0.1
 logging_steps: 5
 save_steps: 444
 overwrite_output_dir: true
-load_best_model_at_end: true
 run_name: Llama_Open_Webui_0.1
 
 ### hub
