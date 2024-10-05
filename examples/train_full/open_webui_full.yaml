@@ -13,7 +13,7 @@ optim: adamw_8bit
 
 ### ddp
 ddp_timeout: 180000000
-deepspeed: examples/deepspeed/ds_z2_config.json
+deepspeed: examples/deepspeed/ds_z3_config.json
 
 ### dataset
 dataset: open_webui_dataset
@@ -26,32 +26,32 @@ preprocessing_num_workers: 16
 use_fast_tokenizer: true
 
 ### output
-output_dir: saves/full/Llama_Open_Webui_0.5
+output_dir: saves/full/Llama_Open_Webui_0.8
 logging_steps: 5
-save_steps: 480
+save_steps: 350
 overwrite_output_dir: true
-run_name: Llama_Open_Webui_0.5
+run_name: Llama_Open_Webui_0.8
 
 ### hub
 push_to_hub: true
-hub_model_id: llama_8b_lima_5
+hub_model_id: llama_8b_lima_8
 hub_strategy: end
 hub_token: __HUB__TOKEN__PLACEHOLDER__
 
 ### train
-per_device_train_batch_size: 2
-gradient_accumulation_steps: 2
+per_device_train_batch_size: 3
+gradient_accumulation_steps: 3
 learning_rate: 0.000008
 num_train_epochs: 1.0
 lr_scheduler_type: polynomial
 bf16: true
-max_grad_norm: 1.1
+max_grad_norm: 1.0
 warmup_steps: 25
-weight_decay: 0.01
+weight_decay: 0.001
 
 ### eval
 val_size: 0.05
-per_device_eval_batch_size: 2
+per_device_eval_batch_size: 3
 evaluation_strategy: steps
-eval_steps: 30
+eval_steps: 35
 save_total_limit: 3
