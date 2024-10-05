@@ -47,6 +47,21 @@
       "assistant_tag": "gpt"
     }
   },
+  "open_webui_kto": {
+    "hf_hub_url": "OpenLeecher/open_webui_kto",
+    "formatting": "sharegpt",
+    "columns": {
+      "messages": "conversations",
+      "system": "system",
+      "kto_tag": "label"
+    },
+    "tags": {
+      "role_tag": "from",
+      "content_tag": "value",
+      "user_tag": "human",
+      "assistant_tag": "gpt"
+    }
+  },
   "long_ow_hf": {
     "hf_hub_url": "OpenLeecher/long_ow_hf",
     "formatting": "sharegpt",
