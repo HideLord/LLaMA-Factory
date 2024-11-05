@@ -35,11 +35,11 @@ def get_rewards_from_server(server_url: str, messages: List[str]) -> List["torch
     r"""
     Gets reward scores from the API server.
     """
-    headers = {"Content-Type": "application/json"}
+    headers = {"Content-Type": "application/json", "X-API-Key": 'dummy_api_key'}
     payload = {"model": "model", "messages": messages}
     response = requests.post(server_url, json=payload, headers=headers)
     rewards = json.loads(response.text)["scores"]
-    return torch.Tensor(rewards)
+    return [torch.tensor(reward) for reward in rewards]
 
 
 def replace_model(model: "AutoModelForCausalLMWithValueHead", target: Literal["default", "reward"]) -> None:

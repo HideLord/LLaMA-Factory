@@ -1,0 +1,49 @@
+### model
+model_name_or_path: meta-llama/Llama-3.1-8B-Instruct
+
+### method
+stage: sft
+do_train: true
+finetuning_type: full
+flash_attn: fa2
+enable_liger_kernel: true
+optim: adamw_8bit
+
+### ddp
+ddp_timeout: 180000000
+deepspeed: examples/deepspeed/ds_z3_config.json
+
+### dataset
+dataset: coherence_dataset
+dataset_dir: data
+template: llama3
+seed: 66
+cutoff_len: 9000
+preprocessing_num_workers: 16
+use_fast_tokenizer: true
+
+### output
+output_dir: saves/full/coherence_class
+logging_steps: 5
+save_steps:  1000000
+overwrite_output_dir: true
+run_name: CoherenceClass
+
+### train
+per_device_train_batch_size: 4
+gradient_accumulation_steps: 2
+learning_rate: 0.0000055
+num_train_epochs: 1.0
+lr_scheduler_type: polynomial
+bf16: true
+max_grad_norm: 1.0
+warmup_steps: 35
+weight_decay: 0.01
+
+### eval
+val_size: 0.05
+per_device_eval_batch_size: 2
+evaluation_strategy: steps
+eval_steps: 50
+save_total_limit: 1
+save_only_model: true

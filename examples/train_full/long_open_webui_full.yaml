@@ -1,0 +1,57 @@
+### model
+#model_name_or_path: /home/hidelord/text-generation-webui-snapshot-2024-04-14/models/meta-llama_Meta-Llama-3-8B
+model_name_or_path: meta-llama/Meta-Llama-3-8B
+
+### method
+stage: sft
+do_train: true
+finetuning_type: full
+low_cpu_mem_usage: true
+flash_attn: fa2
+enable_liger_kernel: true
+optim: adamw_8bit
+
+### ddp
+ddp_timeout: 180000000
+deepspeed: examples/deepspeed/ds_z3_config.json
+
+### dataset
+dataset: long_ow_hf
+dataset_dir: data
+template: llama3
+data_seed: 66
+seed: 66
+cutoff_len: 8192
+preprocessing_num_workers: 16
+use_fast_tokenizer: true
+
+### output
+output_dir: saves/full/Llama_Open_Webui_0.1
+logging_steps: 5
+save_steps: 444
+overwrite_output_dir: true
+run_name: Llama_Open_Webui_0.1
+
+### hub
+push_to_hub: true
+hub_model_id: llama_8b_lima
+hub_strategy: end
+hub_token: __HUB__TOKEN__PLACEHOLDER__
+
+### train
+per_device_train_batch_size: 2
+gradient_accumulation_steps: 2
+learning_rate: 0.000009
+num_train_epochs: 1.0
+lr_scheduler_type: polynomial
+bf16: true
+max_grad_norm: 1.0
+warmup_steps: 25
+weight_decay: 0.005
+
+### eval
+val_size: 0.05
+per_device_eval_batch_size: 4
+evaluation_strategy: steps
+eval_steps: 12
+save_total_limit: 3

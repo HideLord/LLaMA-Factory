@@ -24,6 +24,7 @@ from typing import TYPE_CHECKING, Dict, Literal, Optional, Tuple, Union
 import torch
 import torch.nn.functional as F
 from transformers import Trainer
+from transformers.trainer import SequentialSampler
 from trl import DPOTrainer
 from trl.trainer import disable_dropout_in_model
 from typing_extensions import override
@@ -106,6 +107,9 @@ class CustomDPOTrainer(DPOTrainer):
             self.accelerator.clip_grad_norm_ = MethodType(clip_grad_norm_old_version, self.accelerator)
             self.add_callback(BAdamCallback)
 
+    def _get_train_sampler(self) -> Optional[torch.utils.data.Sampler]:
+        return SequentialSampler(self.train_dataset)
+    
     @override
     def create_optimizer(self) -> "torch.optim.Optimizer":
         if self.optimizer is None:

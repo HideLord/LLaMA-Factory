@@ -1,0 +1,59 @@
+base_model: unsloth/Llama-3.2-3B-Instruct
+model_type: AutoModelForSequenceClassification
+num_labels: 1
+tokenizer_type: AutoTokenizer
+
+reward_model: true
+chat_template: llama3
+datasets:
+  - path: OpenLeecher/story_rate_dataset
+    type: bradley_terry.chat_template
+    split: train
+test_datasets:
+  - path: OpenLeecher/story_rate_dataset
+    type: bradley_terry.chat_template
+    split: test
+
+sequence_len: 10000
+curriculum_sampling: true
+
+wandb_project: huggingface
+wandb_name: story_rm
+logging_steps: 5
+
+output_dir: ./model
+
+gradient_accumulation_steps: 32
+micro_batch_size: 1
+num_epochs: 1
+warmup_steps: 50
+learning_rate: 0.000001
+
+lr_scheduler: polynomial
+lr_scheduler_kwargs:
+  lr_end: 0.0000002
+  power: 2.5
+
+eval_steps: 100
+saves_per_epoch: 1
+
+optimizer: adamw_8bit
+weight_decay: 0.01
+flash_attention: true
+
+plugins:
+  - axolotl.integrations.liger.LigerPlugin
+liger_rope: true
+liger_rms_norm: true
+liger_glu_activation: true
+liger_layer_norm: true
+liger_fused_linear_cross_entropy: true
+
+max_grad_norm: 1
+
+deepspeed: deepspeed_configs/zero3_bf16.json
+bf16: true
+
+special_tokens:
+  pad_token: <|finetune_right_pad_id|>
+  eos_token: <|eot_id|>
