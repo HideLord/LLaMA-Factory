@@ -1,0 +1,48 @@
+### model
+model_name_or_path: OpenLeecher/story_gen_11_kto
+
+### method
+stage: kto
+do_train: true
+pref_beta: 0.025
+finetuning_type: full
+flash_attn: fa2
+enable_liger_kernel: true
+optim: adamw_8bit
+
+### ddp
+ddp_timeout: 180000000
+deepspeed: examples/deepspeed/ds_z3_config.json
+
+### dataset
+dataset: story_dataset_kto
+dataset_dir: data
+template: llama3
+seed: 42
+cutoff_len: 4250
+preprocessing_num_workers: 16
+use_fast_tokenizer: true
+
+### output
+output_dir: saves/full/story_gen
+logging_steps: 5
+save_steps:  1000000
+overwrite_output_dir: true
+run_name: StoryGen
+
+### train
+per_device_train_batch_size: 1
+gradient_accumulation_steps: 4
+learning_rate: 0.000001
+num_train_epochs: 1.0
+lr_scheduler_type: polynomial
+bf16: true
+max_grad_norm: 1.0
+warmup_steps: 15
+weight_decay: 0.03
+
+### eval
+val_size: 0.05
+per_device_eval_batch_size: 1
+evaluation_strategy: steps
+eval_steps: 40

@@ -27,7 +27,7 @@ from accelerate.utils import DistributedDataParallelKwargs
 from tqdm import tqdm
 from transformers import GenerationConfig, Trainer, TrainerControl, TrainerState
 from transformers.optimization import get_scheduler
-from transformers.trainer import DEFAULT_CALLBACKS
+from transformers.trainer import DEFAULT_CALLBACKS, SequentialSampler
 from transformers.trainer_callback import CallbackHandler
 from transformers.trainer_pt_utils import remove_dummy_checkpoint
 from transformers.trainer_utils import PREFIX_CHECKPOINT_DIR
@@ -66,6 +66,10 @@ class CustomPPOTrainer(PPOTrainer, Trainer):
     Inherits PPOTrainer.
     """
 
+    @override
+    def _get_train_sampler(self) -> Optional[torch.utils.data.Sampler]:
+        return SequentialSampler(self.train_dataset)
+    
     def __init__(
         self,
         model_args: "ModelArguments",
@@ -83,7 +87,8 @@ class CustomPPOTrainer(PPOTrainer, Trainer):
         eval_dataset: Optional["Dataset"] = None,
     ) -> None:
         if eval_dataset is not None:
-            raise NotImplementedError("PPOTrainer does not support eval dataset yet.")
+            eval_dataset = None
+            #raise NotImplementedError("PPOTrainer does not support eval dataset yet.")
 
         backward_batch_size = training_args.per_device_train_batch_size * training_args.gradient_accumulation_steps
         ppo_config = PPOConfig(
@@ -103,6 +108,8 @@ class CustomPPOTrainer(PPOTrainer, Trainer):
             accelerator_kwargs={"step_scheduler_with_optimizer": False},
             log_with=training_args.report_to[0] if training_args.report_to else None,
             project_kwargs={"logging_dir": training_args.logging_dir},
+            init_kl_coef=0.1,
+            kl_penalty="abs",
         )
 
         # Add deepspeed config
@@ -199,6 +206,10 @@ class CustomPPOTrainer(PPOTrainer, Trainer):
             * self.finetuning_args.ppo_buffer_size
             * self.args.world_size
         )
+
+        print('Batch params:', self.args.per_device_train_batch_size,self.args.gradient_accumulation_steps,self.finetuning_args.ppo_buffer_size,self.args.world_size)
+        print('Total size:', total_train_batch_size)
+
         if self.args.max_steps > 0:
             num_examples = total_train_batch_size * self.args.max_steps
             num_train_epochs = sys.maxsize
@@ -245,15 +256,20 @@ class CustomPPOTrainer(PPOTrainer, Trainer):
             # Get inputs
             self.model.eval()
             self.tokenizer.padding_side = "right"  # change padding side
-            queries, responses, rewards = [], [], []
-            for idx in range(0, self.config.batch_size, self.config.mini_batch_size):
+
+            # Accumulate all queries and responses
+            queries, responses = [], []
+            for idx in range(0, self.config.batch_size, self.finetuning_args.rollout_batch_size):
                 mini_batch_queries, mini_batch_responses = self.get_inputs(
-                    batch[idx : idx + self.config.mini_batch_size]
+                    batch[idx : idx + self.finetuning_args.rollout_batch_size]
                 )
-                mini_batch_rewards = self.get_rewards(mini_batch_queries, mini_batch_responses)
                 queries.extend(mini_batch_queries)
                 responses.extend(mini_batch_responses)
-                rewards.extend(mini_batch_rewards)
+
+            #queries, responses = self.get_inputs(batch)
+            rewards = self.get_rewards(queries, responses)
+
+            print(f'Mean reward is: {torch.stack(rewards).mean().item()}')
 
             # Run PPO step
             self.model.train()
@@ -272,6 +288,9 @@ class CustomPPOTrainer(PPOTrainer, Trainer):
 
             self.state.global_step += 1
             self.callback_handler.on_step_end(self.args, self.state, self.control)
+            
+            print(f'KL: {float(stats["objective/kl"])}')
+            print(f'var_explained: {float(stats["ppo/val/var_explained"])}')
 
             if self.is_local_process_zero() and (step + 1) % self.args.logging_steps == 0:
                 logs = dict(

@@ -1,5 +1,5 @@
 ### model
-model_name_or_path: meta-llama/Meta-Llama-3-8B-Instruct
+model_name_or_path: /home/hidelord/text-generation-webui-snapshot-2024-04-14/models/meta-llama_Meta-Llama-3-8B
 
 ### method
 stage: sft
@@ -12,10 +12,10 @@ galore_rank: 128
 galore_scale: 2.0
 
 ### dataset
-dataset: identity,alpaca_en_demo
+dataset: open_webui_dataset
+dataset_dir: data
 template: llama3
-cutoff_len: 2048
-max_samples: 1000
+cutoff_len: 1024
 overwrite_cache: true
 preprocessing_num_workers: 16
 
@@ -30,8 +30,8 @@ overwrite_output_dir: true
 per_device_train_batch_size: 1
 gradient_accumulation_steps: 1
 learning_rate: 1.0e-5
-num_train_epochs: 3.0
-lr_scheduler_type: cosine
+num_train_epochs: 1.0
+lr_scheduler_type: polynomial
 warmup_ratio: 0.1
 pure_bf16: true
 ddp_timeout: 180000000

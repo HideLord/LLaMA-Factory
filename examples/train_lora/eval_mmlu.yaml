@@ -1,0 +1,9 @@
+### model
+model_name_or_path: /home/hidelord/LLaMA-Factory/export_folder/ultima_kto_1/
+save_dir: saves/eval/ultima_kto_v1
+
+### dataset
+task: mmlu
+split: test
+lang: en
+template: mistral

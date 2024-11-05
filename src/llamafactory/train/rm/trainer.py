@@ -23,6 +23,7 @@ from typing import TYPE_CHECKING, Dict, List, Optional, Tuple, Union
 import torch
 from transformers import Trainer
 from typing_extensions import override
+from transformers.trainer import SequentialSampler
 
 from ...extras import logging
 from ...extras.packages import is_transformers_version_equal_to_4_46
@@ -64,6 +65,10 @@ class PairwiseTrainer(Trainer):
 
             self.accelerator.clip_grad_norm_ = MethodType(clip_grad_norm_old_version, self.accelerator)
             self.add_callback(BAdamCallback)
+
+    @override
+    def _get_train_sampler(self) -> Optional[torch.utils.data.Sampler]:
+        return SequentialSampler(self.train_dataset)
 
     @override
     def create_optimizer(self) -> "torch.optim.Optimizer":

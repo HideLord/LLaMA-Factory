@@ -1,0 +1,57 @@
+### model
+model_name_or_path: Qwen/Qwen2.5-3B-Instruct
+
+### method
+stage: rm
+do_train: true
+finetuning_type: full
+flash_attn: fa2
+enable_liger_kernel: true
+optim: adamw_8bit
+
+### ddp
+ddp_timeout: 180000000
+deepspeed: examples/deepspeed/ds_z3_config.json
+
+### dataset
+dataset: story_rate_dataset
+dataset_dir: data
+template: qwen
+data_seed: 66
+seed: 66
+cutoff_len: 20000
+preprocessing_num_workers: 16
+use_fast_tokenizer: true
+
+### output
+output_dir: saves/full/story_rate_rm
+logging_steps: 5
+save_steps: 100000
+overwrite_output_dir: true
+run_name: StoryRateRm
+
+### hub
+push_to_hub: true
+hub_private_repo: true
+hub_model_id: story_rate_rm_1
+hub_strategy: end
+hub_token: __HUB__TOKEN__PLACEHOLDER__
+
+### train
+per_device_train_batch_size: 1
+gradient_accumulation_steps: 2
+learning_rate: 0.00001
+num_train_epochs: 1.0
+lr_scheduler_type: polynomial
+bf16: true
+max_grad_norm: 1.0
+warmup_steps: 35
+weight_decay: 0.001
+
+### eval
+val_size: 0.05
+per_device_eval_batch_size: 1
+evaluation_strategy: steps
+eval_steps: 40
+save_total_limit: 1
+save_only_model: true

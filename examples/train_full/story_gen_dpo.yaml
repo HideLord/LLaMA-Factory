@@ -1,0 +1,57 @@
+### model
+model_name_or_path: OpenLeecher/story_gen_9
+
+### method
+stage: dpo
+do_train: true
+pref_beta: 10
+simpo_gamma: 3
+pref_loss: simpo
+#pref_ftx: 0.5
+finetuning_type: full
+flash_attn: fa2
+optim: adamw_8bit
+
+### ddp
+ddp_timeout: 180000000
+deepspeed: examples/deepspeed/ds_z3_config.json
+
+### dataset
+dataset: story_dataset_dpo
+dataset_dir: data
+template: llama3
+seed: 42
+cutoff_len: 6000
+preprocessing_num_workers: 16
+use_fast_tokenizer: true
+
+### output
+output_dir: saves/full/story_gen
+logging_steps: 5
+save_steps:  1000000
+overwrite_output_dir: true
+run_name: StoryGen
+
+### hub
+push_to_hub: true
+hub_private_repo: true
+hub_model_id: story_gen_9_simpo
+hub_strategy: end
+hub_token: __HUB__TOKEN__PLACEHOLDER__
+
+### train
+per_device_train_batch_size: 1
+gradient_accumulation_steps: 15
+learning_rate: 0.000001
+num_train_epochs: 1.0
+lr_scheduler_type: cosine
+bf16: true
+max_grad_norm: 1.0
+warmup_steps: 13
+#weight_decay: 0.03
+
+### eval
+val_size: 0.05
+per_device_eval_batch_size: 1
+evaluation_strategy: steps
+eval_steps: 40
