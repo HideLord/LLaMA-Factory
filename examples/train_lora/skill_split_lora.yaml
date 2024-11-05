@@ -1,0 +1,56 @@
+### model
+model_name_or_path: /home/hidelord/text-generation-webui-snapshot-2024-04-14/models/phi-3-mini-4k-instruct
+
+### method
+stage: sft
+do_train: true
+finetuning_type: lora
+flash_attn: fa2
+enable_liger_kernel: true
+optim: lion_8bit
+
+### lora
+lora_rank: 320
+lora_alpha: 500
+lora_dropout: 0.01
+lora_target: all
+
+### ddp
+ddp_timeout: 180000000
+deepspeed: examples/deepspeed/ds_z0_config.json
+
+### dataset
+dataset: skill_split_dataset
+dataset_dir: data
+template: phi
+data_seed: 66
+seed: 66
+cutoff_len: 4000
+preprocessing_num_workers: 16
+use_fast_tokenizer: true
+
+### output
+output_dir: /home/hidelord/text-generation-webui-snapshot-2024-04-14/models/SkillSplit_v5.0
+logging_steps: 5
+save_steps: 100000
+overwrite_output_dir: true
+run_name: SkillSplit_v5.0
+
+### train
+per_device_train_batch_size: 2
+gradient_accumulation_steps: 1
+learning_rate: 0.0001
+num_train_epochs: 1.0
+lr_scheduler_type: polynomial
+bf16: true
+max_grad_norm: 1.0
+warmup_steps: 35
+weight_decay: 0.001
+
+### eval
+val_size: 0.05
+per_device_eval_batch_size: 4
+evaluation_strategy: steps
+eval_steps: 40
+save_total_limit: 1
+save_only_model: true

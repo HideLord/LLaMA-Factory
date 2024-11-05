@@ -164,6 +164,10 @@ class RLHFArguments:
         default=1,
         metadata={"help": "The number of mini-batches to make experience buffer in a PPO optimization step."},
     )
+    rollout_batch_size: int = field(
+        default=20,
+        metadata={"help": "The number of mini-batches to make experience buffer in a PPO optimization step."},
+    )
     ppo_epochs: int = field(
         default=4,
         metadata={"help": "The number of epochs to perform in a PPO optimization step."},

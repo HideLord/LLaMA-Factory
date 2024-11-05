@@ -25,6 +25,7 @@ import torch
 from transformers import Trainer
 from trl import KTOTrainer
 from trl.trainer import disable_dropout_in_model
+from transformers.trainer import SequentialSampler
 from typing_extensions import override
 
 from ...extras.constants import IGNORE_INDEX
@@ -114,12 +115,17 @@ class CustomKTOTrainer(KTOTrainer):
         create_custom_scheduler(self.args, num_training_steps, optimizer)
         return super().create_scheduler(num_training_steps, optimizer)
 
+
     @override
-    def _get_train_sampler(self) -> Optional["torch.utils.data.Sampler"]:
-        r"""
-        Replaces the sequential sampler of KTO Trainer created by trl with the random sampler.
-        """
-        return Trainer._get_train_sampler(self)
+    def _get_train_sampler(self) -> Optional[torch.utils.data.Sampler]:
+        return SequentialSampler(self.train_dataset)
+
+    # @override
+    # def _get_train_sampler(self) -> Optional["torch.utils.data.Sampler"]:
+    #     r"""
+    #     Replaces the sequential sampler of KTO Trainer created by trl with the random sampler.
+    #     """
+    #     return Trainer._get_train_sampler(self)
 
     @override
     def get_batch_samples(self, epoch_iterator, num_batches):
