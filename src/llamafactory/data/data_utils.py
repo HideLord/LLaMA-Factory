@@ -87,6 +87,8 @@ def split_dataset(
         train_set = dataset.skip(int(data_args.val_size))
         return DatasetDict({"train": train_set, "validation": val_set})
     else:
+        if isinstance(dataset, dict):
+            return DatasetDict({"train": dataset["train"], "validation": dataset["test"]})
         val_size = int(data_args.val_size) if data_args.val_size > 1 else data_args.val_size
         dataset = dataset.train_test_split(test_size=val_size, seed=seed)
         return DatasetDict({"train": dataset["train"], "validation": dataset["test"]})

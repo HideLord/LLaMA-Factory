@@ -247,7 +247,10 @@ def align_dataset(
     else:
         convert_func = partial(convert_sharegpt, dataset_attr=dataset_attr, data_args=data_args)
 
-    column_names = list(next(iter(dataset)).keys())
+    if isinstance(dataset, dict):
+        column_names = list(dataset['train'].column_names)
+    else:
+        column_names = list(next(iter(dataset)).keys())
     kwargs = {}
     if not data_args.streaming:
         kwargs = dict(

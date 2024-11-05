@@ -23,6 +23,7 @@ from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Union
 import numpy as np
 import torch
 from transformers import Seq2SeqTrainer
+from transformers.trainer import SequentialSampler
 from typing_extensions import override
 
 from ...extras import logging
@@ -47,6 +48,9 @@ class CustomSeq2SeqTrainer(Seq2SeqTrainer):
     r"""
     Inherits Seq2SeqTrainer to compute generative metrics such as BLEU and ROUGE.
     """
+
+    def _get_train_sampler(self) -> Optional[torch.utils.data.Sampler]:
+        return SequentialSampler(self.train_dataset)
 
     def __init__(
         self, finetuning_args: "FinetuningArguments", processor: Optional["ProcessorMixin"], **kwargs
