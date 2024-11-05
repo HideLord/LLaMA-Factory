@@ -124,7 +124,7 @@ def _load_single_dataset(
             name=data_name,
             data_dir=data_dir,
             data_files=data_files,
-            split=dataset_attr.split,
+            #split=data_args.split,
             cache_dir=model_args.cache_dir,
             token=model_args.hf_hub_token,
             streaming=data_args.streaming,
@@ -193,7 +193,7 @@ def _get_preprocessed_dataset(
     preprocess_func, print_function = get_preprocess_and_print_func(
         data_args, stage, template, tokenizer, processor, do_generate=(training_args.predict_with_generate and is_eval)
     )
-    column_names = list(next(iter(dataset)).keys())
+    column_names = list(next(iter(dataset['train'])).keys())
     kwargs = {}
     if not data_args.streaming:
         kwargs = dict(
@@ -213,7 +213,7 @@ def _get_preprocessed_dataset(
     if training_args.should_log:
         try:
             print("eval example:" if is_eval else "training example:")
-            print_function(next(iter(dataset)))
+            print_function(next(iter(dataset['train'])))
         except StopIteration:
             if stage == "pt":
                 raise RuntimeError("Cannot find sufficient samples, consider increasing dataset size.")
@@ -277,6 +277,8 @@ def get_dataset(
         if data_args.val_size > 1e-6:
             dataset_dict = split_dataset(dataset, data_args, seed=training_args.seed)
         else:
+            if isinstance(dataset, dict):
+                DatasetDict({"train": dataset["train"], "validation": dataset["test"]})
             dataset_dict = {}
             if dataset is not None:
                 if data_args.streaming:

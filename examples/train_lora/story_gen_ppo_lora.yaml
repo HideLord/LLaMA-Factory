@@ -1,0 +1,70 @@
+### model
+model_name_or_path: /home/hidelord/text-generation-webui-snapshot-2024-04-14/models/OpenLeecher_story_gen_1
+reward_model: https://5e87-46-10-148-86.ngrok-free.app/get_rewards
+reward_model_type: api
+
+### method
+stage: ppo
+do_train: true
+finetuning_type: lora
+flash_attn: fa2
+enable_liger_kernel: true
+optim: adamw_8bit
+
+### lora
+lora_rank: 16
+lora_alpha: 32
+lora_dropout: 0.03
+lora_target: all
+
+### ddp
+ddp_timeout: 180000000
+deepspeed: examples/deepspeed/ds_z2_config.json
+
+### dataset
+dataset: story_dataset
+dataset_dir: data
+template: llama3
+seed: 66
+cutoff_len: 1280
+max_new_tokens: 768
+preprocessing_num_workers: 16
+use_fast_tokenizer: true
+
+### output
+output_dir: saves/full/story_gen
+logging_steps: 1
+save_steps:  100
+overwrite_output_dir: true
+report_to: wandb
+run_name: StoryGen_PPO
+
+### hub
+push_to_hub: false
+hub_private_repo: true
+hub_model_id: story_gen_1
+hub_strategy: end
+hub_token: __HUB__TOKEN__PLACEHOLDER__
+
+### train
+per_device_train_batch_size: 1
+gradient_accumulation_steps: 2
+rollout_batch_size: 32
+ppo_whiten_rewards: false
+ppo_buffer_size: 1
+ppo_score_norm: true
+ppo_epochs: 4
+ppo_target: 15
+learning_rate: 0.00001
+num_train_epochs: 1.0
+lr_scheduler_type: polynomial
+bf16: true
+max_grad_norm: 1.0
+warmup_steps: 0
+weight_decay: 0.005
+
+### eval
+val_size: 0.05
+per_device_eval_batch_size: 1
+evaluation_strategy: steps
+eval_steps: 40
